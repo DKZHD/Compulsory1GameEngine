@@ -12,71 +12,41 @@ QuadTree::QuadTree(glm::vec2 bottomLeft, glm::vec2 topRight) : BoxObject(bottomL
 
 QuadTree* QuadTree::FindQuad(BallObject& object)
 {
-	if (object.GetPosition().x > mTransform.pos.x + mTransform.size.x || object.GetPosition().x<mTransform.pos.x || object.GetPosition().y > mTransform.pos.y + mTransform.size.y || object.GetPosition().y < mTransform.pos.y)
-		return nullptr;
-	if(!leftBot || !leftTop || !rightTop || !rightBot)
+	if (object.GetPosition().x - object.GetRadius() < mTransform.pos.x && object.GetPosition().x + object.GetRadius() > mTransform.pos.x ||
+		object.GetPosition().x - object.GetRadius() < mTransform.pos.x + mTransform.size.x && object.GetPosition().x + object.GetRadius() > mTransform.pos.x + mTransform.size.x ||
+		object.GetPosition().y - object.GetRadius() < mTransform.pos.y && object.GetPosition().y + object.GetRadius() > mTransform.pos.y ||
+		object.GetPosition().y - object.GetRadius() < mTransform.pos.y + mTransform.size.y && object.GetPosition().y + object.GetRadius() > mTransform.pos.y + mTransform.size.y)
 	{
-		if(parent!=nullptr)
-		{
-			containedBallObjects.push_back(&object);
-			for(auto it = parent->containedBallObjects.begin(); it!=parent->containedBallObjects.end();++it)
-			{
-				if (*it == &object)
-				{
-					parent->containedBallObjects.erase(it);
-					break;
-				}
-			}
 
-		}
+	}
+		
+	if (object.GetPosition().x > mTransform.pos.x + mTransform.size.x || object.GetPosition().x<mTransform.pos.x || object.GetPosition().y > mTransform.pos.y + mTransform.size.y || object.GetPosition().y < mTransform.pos.y)
+	{
+		std::erase(containedBallObjects, &object);
+		if (parent)
+			std::erase(parent->containedBallObjects, &object);
+		return nullptr;
+	}
+	if(!leftBot)
+	{
+		if (std::ranges::find(containedBallObjects.begin(), containedBallObjects.end(), &object) == containedBallObjects.end())
+			containedBallObjects.push_back(&object);
 		return this;
 	}
-	if (containedBallObjects.size() > 15)
-		SubDivide();
-	//if (leftBot->containedBallObjects.size() + leftTop->containedBallObjects.size() +
-	//	rightBot->containedBallObjects.size() + rightTop->containedBallObjects.size() + containedBallObjects.size() < 15)
-	//{
-	//	containedBallObjects.insert(containedBallObjects.begin(), leftBot->containedBallObjects.begin(), leftBot->containedBallObjects.end());
-	//	containedBallObjects.insert(containedBallObjects.begin() + containedBallObjects.size(), leftTop->containedBallObjects.begin(), leftTop->containedBallObjects.end());
-	//	containedBallObjects.insert(containedBallObjects.begin() + containedBallObjects.size(), rightBot->containedBallObjects.begin(), rightBot->containedBallObjects.end());
-	//	containedBallObjects.insert(containedBallObjects.begin() + containedBallObjects.size(), rightTop->containedBallObjects.begin(), rightTop->containedBallObjects.end());
-	//	leftBot.reset();
-	//	rightBot.reset();
-	//	leftTop.reset();
-	//	rightTop.reset();
-	//	return this;
-	//}
-	
 	QuadTree* ptr = nullptr;
-	if(leftBot)
-	{
-		if (ptr = leftBot->FindQuad(object))
-			return ptr;
-		if (ptr = leftTop->FindQuad(object))
-			return ptr;
-		if (ptr = rightBot->FindQuad(object))
-			return ptr;
-		if (ptr = rightTop->FindQuad(object))
-			return ptr;
-	}
-	return ptr;
-
+	if (ptr = leftBot->FindQuad(object))
+		return ptr;
+	if(rightBot->FindQuad(object))
+		return ptr;
+	if(leftTop->FindQuad(object))
+		return ptr;
+	if(rightTop->FindQuad(object))
+		return ptr;
+	return nullptr;
 }
 
 void QuadTree::Render(unsigned program)
 {
-	if(objManagerRef)
-	{
-		objManagerRef->CheckCollisionSection(containedBallObjects);
-		if(leftBot)
-		{
-			objManagerRef->CheckCollisionSection(leftBot->containedBallObjects);
-			objManagerRef->CheckCollisionSection(rightBot->containedBallObjects);
-			objManagerRef->CheckCollisionSection(leftTop->containedBallObjects);
-			objManagerRef->CheckCollisionSection(rightTop->containedBallObjects);
-		}
-
-	}
 	glPolygonMode(GL_FRONT, GL_LINE);
 	BoxObject::Render(program);
 	if(leftBot)
@@ -88,7 +58,7 @@ void QuadTree::Render(unsigned program)
 	}
 }
 
-void QuadTree::Init(ObjectManager& obj_manager)
+void QuadTree::Init(ObjectManager& obj_manager, bool subDivide)
 {
 	if (!objManagerRef)
 		objManagerRef = &obj_manager;
@@ -96,12 +66,34 @@ void QuadTree::Init(ObjectManager& obj_manager)
 	{
 		containedBallObjects.push_back(&obj);
 	}
+	if(subDivide)
+	{
+		SubDivide();
+		leftBot->SubDivide();
+		rightBot->SubDivide();
+		leftTop->SubDivide();
+		rightTop->SubDivide();
+	}
 	for(BallObject* obj : containedBallObjects)
 	{
 		FindQuad(*obj);
 	}
 }
-int numSubDivs = 0;
+
+bool QuadTree::CheckAllCollisions(QuadTree* q_t)
+{
+	objManagerRef->CheckCollisionSection(q_t->containedBallObjects);
+	if(q_t->leftBot)
+	{
+		CheckAllCollisions(q_t->leftBot.get());
+		CheckAllCollisions(q_t->rightBot.get());
+		CheckAllCollisions(q_t->leftTop.get());
+		CheckAllCollisions(q_t->rightTop.get());
+	}
+	return false;
+}
+
+
 void QuadTree::SubDivide()
 {
 	if (numSubDivs > 3)
@@ -116,4 +108,15 @@ void QuadTree::SubDivide()
 	rightTop->parent = this;
 	rightBot->parent = this;
 	numSubDivs++;
+}
+
+void QuadTree::UnSubDivide()
+{
+	if (parent == nullptr)
+		return;
+	leftBot.reset();
+	rightBot.reset();
+	rightTop.reset();
+	leftTop.reset();
+	numSubDivs--;
 }

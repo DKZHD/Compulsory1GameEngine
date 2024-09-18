@@ -1,5 +1,7 @@
 #include "ObjectManager.h"
 #include <ctime>
+#include <glad/glad.h>
+
 #include "../Object/BallObject.h"
 #include "../Object/BoxObject.h"
 #include "QuadTree.h"
@@ -53,6 +55,7 @@ void ObjectManager::Render(unsigned program)
 	{
 		element.Render(program);
 	}
+	glBindVertexArray(0);
 }
 
 void ObjectManager::Update(float deltaTime, QuadTree& quad_tree)
@@ -70,19 +73,10 @@ void ObjectManager::CheckCollisions()
 	{
 		for (int j = 0; j < mBallObjects.size(); ++j)
 		{
-			mBoxObjects[i].checkCollision(mBallObjects[j].GetPosition(), mBallObjects[j].GetRadius(), mBallObjects[j].GetVelocity(),mBallObjects[j].prevPos);
+			mBoxObjects[i].checkCollision(mBallObjects[j].GetPosition(), mBallObjects[j].GetRadius(), mBallObjects[j].GetVelocity(), mBallObjects[j].prevPos);
 		}
 	}
-	//for (int i = 0; i < mBallObjects.size(); i++)
-	//{
-	//	for (int j = i + 1; j < mBallObjects.size(); j++)
-	//	{
-	//		if (mBallObjects[i].checkCollision(mBallObjects[j]))
-	//		{
-	//			break;
-	//		}
-	//	}
-	//}
+
 }
 
 void ObjectManager::CheckCollisionSection(std::vector<BallObject*> ball_objects)

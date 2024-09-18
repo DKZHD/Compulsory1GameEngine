@@ -77,7 +77,9 @@ void BallObject::Render(unsigned program)
 
 bool BallObject::checkCollision(BallObject& object)
 {
-	float l = std::abs(std::sqrtf(std::powf(object.GetPosition().x-GetPosition().x,2.f) + std::powf(object.GetPosition().y - GetPosition().y, 2.f)));
+	float dx = object.GetPosition().x - GetPosition().x;
+	float dy = object.GetPosition().y - GetPosition().y;
+	float l = sqrtf(dx * dx + dy * dy);
 	float d = GetRadius() + object.GetRadius();
 	if (l >= d)
 		return false;
@@ -89,8 +91,11 @@ bool BallObject::checkCollision(BallObject& object)
 	float v1Num = glm::dot(GetVelocity()-object.GetVelocity(),GetPosition()-object.GetPosition());
 	float v2Num = glm::dot(object.GetVelocity()-GetVelocity(), object.GetPosition() - GetPosition());
 
-	glm::vec2 v1 = GetVelocity() - (numM2 / detM) * (v1Num / std::powf(glm::distance(GetPosition(), object.GetPosition()), 2.f))*(GetPosition()-object.GetPosition());
-	glm::vec2 v2 = object.GetVelocity() - (numM1 / detM) * (v2Num / std::powf(glm::distance(object.GetPosition(), GetPosition()), 2.f))*(object.GetPosition()-GetPosition());
+	float detV1 = glm::distance(GetPosition(), object.GetPosition());
+	float detV2 = glm::distance(object.GetPosition(), GetPosition());
+
+	glm::vec2 v1 = GetVelocity() - (numM2 / detM) * (v1Num / (detV1*detV1))*(GetPosition()-object.GetPosition());
+	glm::vec2 v2 = object.GetVelocity() - (numM1 / detM) * (v2Num / (detV2*detV2))*(object.GetPosition()-GetPosition());
 
 	SetVelocity(v1);
 	object.SetVelocity(v2);

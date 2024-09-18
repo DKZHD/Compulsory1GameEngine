@@ -50,7 +50,7 @@ int main()
 
 	QuadTree qt(glm::vec2(-1.7f, -0.9f), glm::vec2(1.7f, 0.9f));
 
-	objManager.AddBall(glm::vec2(0.6f, 0.055f), 0.05f, 128, glm::vec3(1.f));
+	objManager.AddBall(glm::vec2(0.6f, 0.f), 0.05f, 128, glm::vec3(1.f));
 
 	 //*************
 	 //*	 O     *
@@ -60,27 +60,27 @@ int main()
 	 //* O O O O O *
 	 //*************
 
-	//objManager.AddBall(glm::vec2(-0.6f,0.f), 0.05f, 64, glm::vec3(1.f, 1.f, 0.f));
+	objManager.AddBall(glm::vec2(-0.6f,0.f), 0.05f, 64, glm::vec3(1.f, 1.f, 0.f));
 
-	//objManager.AddBall(glm::vec2(-0.7f,0.055f), 0.05f, 64, glm::vec3(1.f, 0.6f, 0.f));
-	//objManager.AddBall(glm::vec2(-0.7f,-0.055f), 0.05f, 64, glm::vec3(1.f, 0.f, 0.f));
+	objManager.AddBall(glm::vec2(-0.7f,0.055f), 0.05f, 64, glm::vec3(1.f, 0.6f, 0.f));
+	objManager.AddBall(glm::vec2(-0.7f,-0.055f), 0.05f, 64, glm::vec3(1.f, 0.f, 0.f));
 
-	//objManager.AddBall(glm::vec2(-0.8f,0.105f), 0.05f, 64, glm::vec3(0.f, 0.f, 1.f));
-	//objManager.AddBall(glm::vec2(-0.8f,0.f), 0.05f, 64, glm::vec3(0.f));
-	//objManager.AddBall(glm::vec2(-0.8f,-0.105f), 0.05f, 64, glm::vec3(0.6f, 0.f, 0.6f));
+	objManager.AddBall(glm::vec2(-0.8f,0.105f), 0.05f, 64, glm::vec3(0.f, 0.f, 1.f));
+	objManager.AddBall(glm::vec2(-0.8f,0.f), 0.05f, 64, glm::vec3(0.f));
+	objManager.AddBall(glm::vec2(-0.8f,-0.105f), 0.05f, 64, glm::vec3(0.6f, 0.f, 0.6f));
 
-	//objManager.AddBall(glm::vec2(-0.9f,0.16f), 0.05f, 64, glm::vec3(1.f, 0.f, 0.f));
-	//objManager.AddBall(glm::vec2(-0.9f,0.055f), 0.05f, 64, glm::vec3(0.f,1.f,0.f));
-	//objManager.AddBall(glm::vec2(-0.9f,-0.055f), 0.05f, 64, glm::vec3(0.55f, 0.34f, 0.05f));
-	//objManager.AddBall(glm::vec2(-0.9f,-0.16f), 0.05f, 64, glm::vec3(0.f, 0.f, 1.f));
+	objManager.AddBall(glm::vec2(-0.9f,0.16f), 0.05f, 64, glm::vec3(1.f, 0.f, 0.f));
+	objManager.AddBall(glm::vec2(-0.9f,0.055f), 0.05f, 64, glm::vec3(0.f,1.f,0.f));
+	objManager.AddBall(glm::vec2(-0.9f,-0.055f), 0.05f, 64, glm::vec3(0.55f, 0.34f, 0.05f));
+	objManager.AddBall(glm::vec2(-0.9f,-0.16f), 0.05f, 64, glm::vec3(0.f, 0.f, 1.f));
 
-	//objManager.AddBall(glm::vec2(-1.f,0.21f), 0.05f, 64, glm::vec3(0.6f, 0.f, 0.6f));
-	//objManager.AddBall(glm::vec2(-1.f,0.105f), 0.05f, 64, glm::vec3(0.55f, 0.34f, 0.05f));
-	//objManager.AddBall(glm::vec2(-1.f,0.f), 0.05f,64, glm::vec3(1.f, 1.f, 0.f));
-	//objManager.AddBall(glm::vec2(-1.f,-0.105f), 0.05f, 64, glm::vec3(1.f, 0.6f, 0.f));
-	//objManager.AddBall(glm::vec2(-1.f,-0.21f), 0.05f, 64, glm::vec3(0.f, 1.f, 0.f));
+	objManager.AddBall(glm::vec2(-1.f,0.21f), 0.05f, 64, glm::vec3(0.6f, 0.f, 0.6f));
+	objManager.AddBall(glm::vec2(-1.f,0.105f), 0.05f, 64, glm::vec3(0.55f, 0.34f, 0.05f));
+	objManager.AddBall(glm::vec2(-1.f,0.f), 0.05f,64, glm::vec3(1.f, 1.f, 0.f));
+	objManager.AddBall(glm::vec2(-1.f,-0.105f), 0.05f, 64, glm::vec3(1.f, 0.6f, 0.f));
+	objManager.AddBall(glm::vec2(-1.f,-0.21f), 0.05f, 64, glm::vec3(0.f, 1.f, 0.f));
 
-	objManager.AddXAmountofBalls(1000, 128, glm::vec3(1.f, 1.f, 0.5f));
+	//objManager.AddXAmountofBalls(500, 64, glm::vec3(1.f, 1.f, 0.5f));
 
 	objManager.AddBox(glm::vec2(-1.8f, -1.f), glm::vec3(0.f, 0.8f, 0.3f), glm::vec2(3.6f, 0.1f));
 	objManager.AddBox(glm::vec2(-2.f, -1.f), glm::vec3(0.f, 0.8f, 0.3f), glm::vec2(0.3f, 2.f));
@@ -91,10 +91,9 @@ int main()
 
 
 
-	qt.Init(objManager);
+	qt.Init(objManager, false);
 
 	float last = glfwGetTime();
-
 	glm::vec3 camForward = glm::vec3(0.f,0.f,-1.f);
 
 	
@@ -122,9 +121,14 @@ int main()
 		}
 		input(window, *objManager.GetBallObjectAtIndex(0));
 
-		qt.Render(shader.Program);
-		objManager.Update(deltaTime, qt);
+		
 		objManager.CheckCollisions();
+		qt.CheckAllCollisions(&qt);
+
+		qt.Render(shader.Program);		
+		objManager.Update(deltaTime, qt);
+
+		
 		glPolygonMode(GL_FRONT, GL_FILL);
 		objManager.Render(shader.Program);
 	

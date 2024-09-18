@@ -1,2 +1,4 @@
-﻿  QuadTree.cpp
+﻿  Source.cpp
+D:\GameEngineArchitecture\RigidBodyCollision\Source.cpp(96,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\GameEngineArchitecture\RigidBodyCollision\Source.cpp(103,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   RigidBodyCollision.vcxproj -> D:\GameEngineArchitecture\RigidBodyCollision\x64\Debug\RigidBodyCollision.exe
